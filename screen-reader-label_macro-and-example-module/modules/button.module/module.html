@@ -1,0 +1,63 @@
+{% import "../../_macros/accessibility.html" %}
+
+{# Set screen label based on the input; if screen reader label is empty, use the button text #}
+{% unless module.screen_reader_label == "" %}
+{% set sr_var = module.screen_reader_label %}
+{% else %}
+{% set sr_var = module.button_text %}
+{% endunless %}
+
+{# Demo output #}
+<br>
+<br>
+<p>
+	Screenreader value: <strong
+		style="margin-top:5vh;padding:1rem;border:.375rem solid #f00; color:#f00">{{ sr_var }}</strong>
+</p>
+<br>
+<br>
+
+{# Actual button #}
+<div class="button-wrapper">
+	{% set href = module.link.url.href %}
+	{% if module.link.url.type is equalto "EMAIL_ADDRESS" %}
+	{% set href = "mailto:" + href %}
+	{% endif %}
+	<a href="{{ href|escape_url }}" class="btn primary-btn">
+		<span class="actual-label">{{ module.button_text|escape_html }}</span>
+		{{ sr_label(sr_var) }}
+	</a>
+</div>
+
+{# Demo CSS #}
+{% require_css %}
+<style>
+	.button-wrapper .sr-only {
+		position: absolute;
+		left: -9999px;
+		opacity: 0;
+	}
+
+	.btn {
+		padding: .5rem 1rem;
+		border-radius: 9999px;
+		text-decoration: none;
+		font-family: sans-serif;
+	}
+
+	.primary-btn {
+		background-color: #0E1E33;
+		color: #A8EB12;
+		border-width: 2px;
+		border-style: solid;
+		border-color: transparent;
+		transition: all .24s linear
+	}
+
+	.primary-btn:hover {
+		background-color: #2F4858;
+		letter-spacing: .05em;
+		border-color: #A8EB12;
+	}
+</style>
+{% end_require_css %}
